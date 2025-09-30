@@ -19,6 +19,7 @@ export const getProductBy = async (filters?: {
 
   const products = await db.query.produtos.findMany({
     where: and(...conditions.filter((c): c is SQL => !!c)),
+    limit: 40,
   });
 
   return products.map((p) => ({

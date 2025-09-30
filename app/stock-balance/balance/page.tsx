@@ -3,13 +3,12 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ArrowLeftIcon, Loader2Icon, Search } from "lucide-react";
-import ProductTable from "./components/table-produts";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getProductBy } from "../actions/product-actions/get-all-product";
 import { useEffect, useState } from "react";
-import { getProductById } from "../actions/product-actions/findById";
+import { getProductAllProductBalance } from "@/app/actions/product-actions/get-product-updates";
+import ProductTableUpdates from "../components/updates_products";
 
 const StockBalancePage = () => {
   const router = useRouter();
@@ -34,30 +33,38 @@ const StockBalancePage = () => {
     isError,
   } = useQuery({
     // A queryKey agora inclui o termo de busca para cache correto
-    queryKey: ["products", debouncedSearchTerm],
-    queryFn: async () => await getProductBy({ nome: debouncedSearchTerm }),
+    queryKey: ["products-balance"],
+    queryFn: async () => await getProductAllProductBalance(),
+    select: (data) => {
+      if (!data) return [];
+      // 1. Filtra os produtos pelo nome no cliente
+      const filteredData = debouncedSearchTerm
+        ? data.filter((product) =>
+            product.nome
+              .toLowerCase()
+              .includes(debouncedSearchTerm.toLowerCase())
+          )
+        : data;
+
+      // 2. Converte os campos para número (ajuste os campos conforme necessário)
+      return filteredData.map((product) => ({
+        ...product,
+        estoque_atual: Number(product.estoque_atual),
+      }));
+    },
   });
 
-  const { data: productById, isLoading: isLoadingById } = useQuery({
-    // A chave de query agora usa o estado 'productId'
-    queryKey: ["product", productId],
-    // A queryFn recebe o contexto e extrai o ID da queryKey
-    queryFn: async ({ queryKey }) => {
-      const [_key, id] = queryKey;
-      return getProductById(id as number);
-    },
-    // A query só será executada se productId não for nulo
-    enabled: !!productId,
-    // A opção 'select' transforma os dados antes de serem retornados.
-    // Aqui, convertemos 'estoque_atual' de string para número.
-    select: (data) => {
-      if (!data) return undefined;
-      return {
-        ...data,
-        estoque_atual: Number(data.estoque_atual),
-      };
-    },
-  });
+  //   const { data: productById, isLoading: isLoadingById } = useQuery({
+  //     // A chave de query agora usa o estado 'productId'
+  //     queryKey: ["product", productId],
+  //     // A queryFn recebe o contexto e extrai o ID da queryKey
+  //     queryFn: async ({ queryKey }) => {
+  //       const [_key, id] = queryKey;
+  //       return getProductById(id as number);
+  //     },
+  //     // A query só será executada se productId não for nulo
+  //     enabled: !!productId,
+  //   });
 
   if (isError) return <div>Erro ao buscar produtos</div>;
 
@@ -71,7 +78,7 @@ const StockBalancePage = () => {
     );
 
   // Decide quais dados mostrar na tabela
-  const tableData = productById ? [productById] : products || [];
+  //   const tableData = productById ? [productById] : products || [];
 
   return (
     <div className="flex flex-col w-full h-full items-center p-2 bg-white/65  space-y-2 ">
@@ -107,23 +114,20 @@ const StockBalancePage = () => {
           <Button
             size={"sm"}
             className="font-bold text-white/80 shadow-2xl"
-            onClick={() => router.push("/stock-balance/balance")}
+            onClick={() => router.back()}
           >
-            <ArrowLeftIcon /> Atualizados
+            <ArrowLeftIcon /> Voltar
           </Button>
-          <h1 className="font-bold text-2xl text-center text-muted-foreground">
-            Tabela de Produtos
-          </h1>
+          <h1 className="font-bold text-2xl text-center text-muted-foreground"></h1>
         </div>
         <div className="flex flex-col overflow-auto p-1">
           {" "}
-          {(isLoading || isLoadingById) && (
-            <p className="text-center">Buscando produtos...</p>
-          )}
-          {!(isLoading || isLoadingById) && tableData.length === 0 && (
+          {isLoading && <p className="text-center">Buscando produtos...</p>}
+          {!isLoading && products?.length === 0 && (
             <p className="text-center">Nenhum produto encontrado.</p>
           )}
-          <ProductTable data={tableData} />
+          <div>Produtos Ja Atualizado</div>
+          <ProductTableUpdates data={products || []} />
         </div>
       </div>
     </div>

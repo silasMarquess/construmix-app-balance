@@ -1,0 +1,1 @@
+ALTER TABLE "produtos" ALTER COLUMN "id" SET DATA TYPE integer;

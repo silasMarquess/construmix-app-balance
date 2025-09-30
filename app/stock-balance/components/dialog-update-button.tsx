@@ -24,6 +24,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { updateProduct } from "@/app/actions/product-actions/update-product";
 import { toast } from "sonner";
+import { produtoCreateSchema } from "@/app/actions/product-actions/create/schema";
+import { ProductInsert } from "@/app/actions/product-actions/create";
 
 export interface Props {
   id_product: number;
@@ -54,8 +56,8 @@ export const UpdateProductDialog = ({ id_product }: Props) => {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (values: z.infer<typeof productUpdate>) => {
-      return await updateProduct(id_product, values);
+    mutationFn: async (values: z.infer<typeof produtoCreateSchema>) => {
+      return await ProductInsert(values);
     },
     onError: (error) => {
       toast.error("Falha ao atualizar o estoque.");
@@ -64,21 +66,31 @@ export const UpdateProductDialog = ({ id_product }: Props) => {
     onSuccess: (data) => {
       toast.success("Estoque do produto atualizado com sucesso !");
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["products-balance"] });
       queryClient.invalidateQueries({ queryKey: ["product", id_product] });
       //setIsOpen(false);
     },
   });
 
-  const form = useForm<z.infer<typeof productUpdate>>({
-    resolver: zodResolver(productUpdate),
+  const form = useForm<z.infer<typeof produtoCreateSchema>>({
+    resolver: zodResolver(produtoCreateSchema),
     defaultValues: {
       estoque_atual: product?.estoque_atual || "0",
+      preco_venda: product?.preco_venda || "0",
+      preco_compra: product?.preco_compra || "0",
+      preco_custo: product?.preco_custo || "0",
     },
   });
 
   useEffect(() => {
     if (product) {
-      form.reset({ estoque_atual: product.estoque_atual || "0" });
+      form.reset({
+        nome: product.nome,
+        estoque_atual: product.estoque_atual || "0",
+        preco_compra: product.preco_compra || "0",
+        preco_custo: product.preco_custo || "0",
+        preco_venda: product.preco_venda || "0",
+      });
     }
   }, [product, form]);
 
@@ -93,15 +105,17 @@ export const UpdateProductDialog = ({ id_product }: Props) => {
       </div>
     );
 
-  const onSubmit = (data: z.infer<typeof productUpdate>) => {
+  const onSubmit = async (data: z.infer<typeof produtoCreateSchema>) => {
+    console.log(data);
     mutate(data);
+    setIsOpen(false);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="rounded-full hover:bg-blue-500" size={"sm"}>
-          Edit <Pencil />
+        <Button className="rounded-full bg-primary" size={"icon"}>
+          <Pencil />
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -138,12 +152,52 @@ export const UpdateProductDialog = ({ id_product }: Props) => {
                 </FormControl>
                 <FormMessage />
               </FormItem>
+
+              <FormItem>
+                <FormLabel>Preco Custo</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="shadcn"
+                    className="bg-red-300/80 border text-black"
+                    readOnly={true}
+                    value={product?.preco_custo}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+
+              <FormItem>
+                <FormLabel>Preco Compra</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="shadcn"
+                    className="bg-red-300/80 border text-black"
+                    readOnly={true}
+                    value={product?.preco_compra}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+
+              <FormItem>
+                <FormLabel>Preco Venda</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="shadcn"
+                    className="bg-red-300/80 border text-black"
+                    readOnly={true}
+                    value={product?.preco_venda}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+
               <FormField
                 control={form.control}
                 name="estoque_atual"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Novo Estoque Atualizado</FormLabel>
+                    <FormLabel>Informe Estoque Atualizado</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="informe o novo estoque"
@@ -155,6 +209,7 @@ export const UpdateProductDialog = ({ id_product }: Props) => {
                   </FormItem>
                 )}
               />
+
               <Button type="submit" disabled={isPending}>
                 {isPending && (
                   <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />

@@ -1,0 +1,1 @@
+ALTER TABLE "produtos" ADD COLUMN "preco_venda" numeric(14, 2) NOT NULL;

@@ -8,27 +8,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { UpdateProductDialog } from "./dialog-update-button";
-import { ProdutoComEstoqueNumerico } from "@/app/actions/product-actions/get-all-product";
+import { ProdutoBalanceComEstoqueNumerico } from "@/app/actions/product-actions/get-product-updates";
 import { formatCurrency } from "@/lib/formatToReal";
 
 interface Props {
-  data: ProdutoComEstoqueNumerico[];
+  data: ProdutoBalanceComEstoqueNumerico[];
 }
-const ProductTable = ({ data }: Props) => {
+
+const ProductTableUpdates = ({ data }: Props) => {
   return (
     <Table className="table-auto">
       <TableCaption>Lista de Produto.</TableCaption>
       <TableHeader>
         <TableRow className="bg-gray-200">
           <TableHead>Editar</TableHead>
-          <TableHead>codigo</TableHead>
-          <TableHead>Nome Produto</TableHead>
+          <TableHead>id</TableHead>
+          <TableHead>Nome</TableHead>
           <TableHead>Estoque Atual</TableHead>
           <TableHead>preco_custo</TableHead>
           <TableHead>preco_compra</TableHead>
           <TableHead>preco_venda</TableHead>
-          <TableHead>Unidade</TableHead>
-          <TableHead>ean</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -43,8 +42,6 @@ const ProductTable = ({ data }: Props) => {
             <TableCell>{formatCurrency(item.preco_custo)}</TableCell>
             <TableCell>{formatCurrency(item.preco_compra)}</TableCell>
             <TableCell>{formatCurrency(item.preco_venda)}</TableCell>
-            <TableCell>{item.unidade}</TableCell>
-            <TableCell>{item.ean}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -52,4 +49,4 @@ const ProductTable = ({ data }: Props) => {
   );
 };
 
-export default ProductTable;
+export default ProductTableUpdates;

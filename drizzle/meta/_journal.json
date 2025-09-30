@@ -15,6 +15,41 @@
       "when": 1759203401768,
       "tag": "0001_windy_omega_sentinel",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759243764567,
+      "tag": "0002_amazing_sauron",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759244207341,
+      "tag": "0003_shocking_warbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1759245078160,
+      "tag": "0004_strange_thunderbolts",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1759245666058,
+      "tag": "0005_yellow_triathlon",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1759247081287,
+      "tag": "0006_foamy_robin_chapel",
+      "breakpoints": true
     }
   ]
 }
