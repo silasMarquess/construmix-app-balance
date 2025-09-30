@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProductBy } from "../actions/product-actions/get-all-product";
 import { useEffect, useState } from "react";
 import { getProductById } from "../actions/product-actions/findById";
+import { Label } from "@radix-ui/react-label";
 
 const StockBalancePage = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const StockBalancePage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-    }, 500); // 500ms de atraso
+    }, 500);
 
     return () => {
       clearTimeout(timer);
@@ -80,6 +81,7 @@ const StockBalancePage = () => {
           <CardTitle>Campo de Pesquisa</CardTitle>
           <div className="flex w-full max-w-sm items-center space-x-2 bg-white shadow-2xl">
             <div className="flex flex-row items-center space-x-2">
+              <Label>Codigo:</Label>
               <Input
                 type="number"
                 onChange={(e) => setProductId(Number(e.target.value) || null)}
@@ -89,6 +91,7 @@ const StockBalancePage = () => {
             </div>
           </div>
           <div className="flex w-full max-w-sm items-center space-x-2 bg-white shadow-2xl">
+            <Label>Nome:</Label>
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input

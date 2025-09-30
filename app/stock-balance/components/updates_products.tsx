@@ -10,6 +10,7 @@ import {
 import { UpdateProductDialog } from "./dialog-update-button";
 import { ProdutoBalanceComEstoqueNumerico } from "@/app/actions/product-actions/get-product-updates";
 import { formatCurrency } from "@/lib/formatToReal";
+import { calcSubtotal } from "../helper/calcul_subtotal";
 
 interface Props {
   data: ProdutoBalanceComEstoqueNumerico[];
@@ -18,30 +19,32 @@ interface Props {
 const ProductTableUpdates = ({ data }: Props) => {
   return (
     <Table className="table-auto">
-      <TableCaption>Lista de Produto.</TableCaption>
+      <TableCaption>{data.length} Produtos Atualizado</TableCaption>
       <TableHeader>
         <TableRow className="bg-gray-200">
-          <TableHead>Editar</TableHead>
           <TableHead>id</TableHead>
           <TableHead>Nome</TableHead>
-          <TableHead>Estoque Atual</TableHead>
-          <TableHead>preco_custo</TableHead>
-          <TableHead>preco_compra</TableHead>
-          <TableHead>preco_venda</TableHead>
+          <TableHead>Estoque x Preço/Custo</TableHead>
+          <TableHead>Estoque x Preço/Venda</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {data.map((item) => (
           <TableRow className="focus:bg-neutral-400" key={item.id}>
-            <TableCell className="font-medium">
-              <UpdateProductDialog id_product={item.id} />
-            </TableCell>
             <TableCell>{item.id}</TableCell>
             <TableCell>{item.nome}</TableCell>
-            <TableCell>{item.estoque_atual}</TableCell>
-            <TableCell>{formatCurrency(item.preco_custo)}</TableCell>
-            <TableCell>{formatCurrency(item.preco_compra)}</TableCell>
-            <TableCell>{formatCurrency(item.preco_venda)}</TableCell>
+            <TableCell className="font-semibold text-sm bg-red-300/40">
+              {item.estoque_atual} x {item.preco_custo} ={" "}
+              {formatCurrency(
+                calcSubtotal(item.estoque_atual, Number(item.preco_custo))
+              )}
+            </TableCell>
+            <TableCell className="font-semibold text-sm bg-green-300/40">
+              {item.estoque_atual} x {item.preco_venda} ={" "}
+              {formatCurrency(
+                calcSubtotal(item.estoque_atual, Number(item.preco_venda))
+              )}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

@@ -86,11 +86,13 @@ export const UpdateProductDialog = ({ id_product }: Props) => {
     if (product) {
       form.reset({
         nome: product.nome,
-        estoque_atual: product.estoque_atual || "0",
+        estoque_atual: String(product.estoque_atual) || "0",
         preco_compra: product.preco_compra || "0",
         preco_custo: product.preco_custo || "0",
         preco_venda: product.preco_venda || "0",
       });
+    } else {
+      form.reset(); // Limpa o formulário se o produto não for encontrado ou enquanto carrega
     }
   }, [product, form]);
 
@@ -104,6 +106,20 @@ export const UpdateProductDialog = ({ id_product }: Props) => {
         Loading
       </div>
     );
+
+  // Adicionado para tratar o caso em que o produto não é encontrado
+  if (!product && !isLoading) {
+    return (
+      <Button
+        variant="destructive"
+        size="icon"
+        className="rounded-full"
+        disabled
+      >
+        <Pencil />
+      </Button>
+    );
+  }
 
   const onSubmit = async (data: z.infer<typeof produtoCreateSchema>) => {
     console.log(data);
