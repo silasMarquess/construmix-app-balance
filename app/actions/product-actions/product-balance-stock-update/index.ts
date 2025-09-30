@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { produtos, produtos_balance } from "@/db/schema";
+import { produtos_balance } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const updateProductBalanced = async (
@@ -13,5 +13,5 @@ export const updateProductBalanced = async (
     .set({
       estoque_atual: String(productBodyUpdate.estoque_atual),
     })
-    .where(eq(produtos.id, id_product));
+    .where(eq(produtos_balance.id, id_product));
 };

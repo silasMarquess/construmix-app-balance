@@ -11,6 +11,7 @@ import { formatCurrency } from "@/lib/formatToReal";
 import { getProductAllProductBalance } from "@/app/actions/product-actions/get-product-updates";
 import ProductTableUpdates from "../components/updates_products";
 import { calcSubtotal } from "../helper/calcul_subtotal";
+import { getProductBUpdateByName } from "@/app/actions/product-actions/get-all-product";
 
 const StockBalancePage = () => {
   const router = useRouter();
@@ -33,25 +34,26 @@ const StockBalancePage = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["products-balance"],
-    queryFn: async () => await getProductAllProductBalance(),
-    select: (data) => {
-      if (!data) return [];
-      // 1. Filtra os produtos pelo nome no cliente
-      const filteredData = debouncedSearchTerm
-        ? data.filter((product) =>
-            product.nome
-              .toLowerCase()
-              .includes(debouncedSearchTerm.toLowerCase())
-          )
-        : data;
+    queryKey: ["products-balance", debouncedSearchTerm],
+    queryFn: async () =>
+      await getProductBUpdateByName({ nome: debouncedSearchTerm }),
+    // select: (data) => {
+    //   if (!data) return [];
+    //   // 1. Filtra os produtos pelo nome no cliente
+    //   const filteredData = debouncedSearchTerm
+    //     ? data.filter((product) =>
+    //         product.nome
+    //           .toLowerCase()
+    //           .includes(debouncedSearchTerm.toLowerCase())
+    //       )
+    //     : data;
 
-      // 2. Converte os campos para número (ajuste os campos conforme necessário)
-      return filteredData.map((product) => ({
-        ...product,
-        estoque_atual: Number(product.estoque_atual),
-      }));
-    },
+    //   // 2. Converte os campos para número (ajuste os campos conforme necessário)
+    //   return filteredData.map((product) => ({
+    //     ...product,
+    //     estoque_atual: Number(product.estoque_atual),
+    //   }));
+    // },
   });
 
   //   const { data: productById, isLoading: isLoadingById } = useQuery({
@@ -95,27 +97,15 @@ const StockBalancePage = () => {
     <div className="flex flex-col w-full h-full items-center p-2 bg-white/65  space-y-2 ">
       <Card className="flex flex-col w-full h-auto max-w-sm items-center justify-center shadow-2xl ">
         <CardContent className="flex flex-col items-center space-y-3">
-          <CardTitle>Campo de Pesquisa</CardTitle>
-
+          <CardTitle>PRODUTOS ATUALIZADOS</CardTitle>
           <div className="flex w-full flex-row max-w-sm items-center space-x-2 bg-white shadow-2xl">
-            <div className="flex w-full max-w-sm items-center space-x-2 bg-white shadow-2xl">
-              <div className="flex flex-row w-1/3  items-center space-x-2">
-                <Input
-                  type="number"
-                  onChange={(e) => setProductId(Number(e.target.value) || null)}
-                  placeholder="codigo"
-                  className="bg-red-300/80 "
-                />
-              </div>
-            </div>
-
             <div className="relative flex-1 w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Pesquisar por nome..."
-                className="pl-10 bg-red-300/80"
+                className="pl-10 bg-yellow-300/40"
               />
             </div>
           </div>
@@ -130,7 +120,7 @@ const StockBalancePage = () => {
           >
             <ArrowLeftIcon /> Voltar
           </Button>
-          <div className="font-bold">Produtos Ja Atualizado</div>
+          <div className="font-bold">(Produtos/Atualizados)</div>
         </div>
         <div className="flex flex-col overflow-auto p-0.5 w-full h-full">
           {" "}

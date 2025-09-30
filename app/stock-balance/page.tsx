@@ -34,7 +34,6 @@ const StockBalancePage = () => {
     isLoading,
     isError,
   } = useQuery({
-    // A queryKey agora inclui o termo de busca para cache correto
     queryKey: ["products", debouncedSearchTerm],
     queryFn: async () => await getProductBy({ nome: debouncedSearchTerm }),
   });

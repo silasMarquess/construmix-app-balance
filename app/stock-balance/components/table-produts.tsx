@@ -22,11 +22,11 @@ const ProductTable = ({ data }: Props) => {
         <TableRow className="bg-gray-200">
           <TableHead>Editar</TableHead>
           <TableHead>codigo</TableHead>
-          <TableHead>Nome Produto</TableHead>
-          <TableHead>Estoque Atual</TableHead>
-          <TableHead>preco_custo</TableHead>
-          <TableHead>preco_compra</TableHead>
-          <TableHead>preco_venda</TableHead>
+          <TableHead>Nome</TableHead>
+          <TableHead>Estoque</TableHead>
+          <TableHead>preco/custo</TableHead>
+          <TableHead>preco/compra</TableHead>
+          <TableHead>preco/venda</TableHead>
           <TableHead>Unidade</TableHead>
           <TableHead>ean</TableHead>
         </TableRow>
@@ -35,7 +35,7 @@ const ProductTable = ({ data }: Props) => {
         {data.map((item) => (
           <TableRow className="focus:bg-neutral-400" key={item.id}>
             <TableCell className="font-medium">
-              <UpdateProductDialog id_product={item.id} />
+              <UpdateProductDialog id_product={item.id} type="create" />
             </TableCell>
             <TableCell>{item.id}</TableCell>
             <TableCell>{item.nome}</TableCell>
