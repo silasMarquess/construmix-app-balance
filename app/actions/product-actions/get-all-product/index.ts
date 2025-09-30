@@ -1,0 +1,28 @@
+"use server";
+import { Produto, produtos } from "@/db/schema";
+import { db } from "@/db/index";
+import { SQL, and, ilike } from "drizzle-orm";
+
+export type ProdutoComEstoqueNumerico = Omit<Produto, "estoque_atual"> & {
+  estoque_atual: number;
+};
+
+export const getProductBy = async (filters?: {
+  nome: string;
+}): Promise<ProdutoComEstoqueNumerico[]> => {
+  const { nome } = filters || {};
+  const conditions: (SQL | undefined)[] = [];
+
+  if (nome) {
+    conditions.push(ilike(produtos.nome, `%${nome}%`));
+  }
+
+  const products = await db.query.produtos.findMany({
+    where: and(...conditions.filter((c): c is SQL => !!c)),
+  });
+
+  return products.map((p) => ({
+    ...p,
+    estoque_atual: parseFloat(p.estoque_atual),
+  }));
+};
