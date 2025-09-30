@@ -7,10 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { UpdateProductDialog } from "./dialog-update-button";
+
 import { ProdutoBalanceComEstoqueNumerico } from "@/app/actions/product-actions/get-product-updates";
 import { formatCurrency } from "@/lib/formatToReal";
 import { calcSubtotal } from "../helper/calcul_subtotal";
+import { UpdateProductDialog } from "./dialog-update-button";
 
 interface Props {
   data: ProdutoBalanceComEstoqueNumerico[];
@@ -22,7 +23,7 @@ const ProductTableUpdates = ({ data }: Props) => {
       <TableCaption>{data.length} Produtos Atualizado</TableCaption>
       <TableHeader>
         <TableRow className="bg-gray-200">
-          <TableHead>id</TableHead>
+          <TableHead>*</TableHead>
           <TableHead>Nome</TableHead>
           <TableHead>Estoque x Preço/Custo</TableHead>
           <TableHead>Estoque x Preço/Venda</TableHead>
@@ -31,7 +32,10 @@ const ProductTableUpdates = ({ data }: Props) => {
       <TableBody>
         {data.map((item) => (
           <TableRow className="focus:bg-neutral-400" key={item.id}>
-            <TableCell>{item.id}</TableCell>
+            <TableCell>
+              {" "}
+              <UpdateProductDialog id_product={item.id} type="update" />
+            </TableCell>
             <TableCell>{item.nome}</TableCell>
             <TableCell className="font-semibold text-sm bg-red-300/40">
               {item.estoque_atual} x {item.preco_custo} ={" "}

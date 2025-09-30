@@ -1,4 +1,7 @@
-import { getProductById } from "@/app/actions/product-actions/findById";
+import {
+  getProductBalanceById,
+  getProductById,
+} from "@/app/actions/product-actions/findById";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,9 +29,11 @@ import { updateProduct } from "@/app/actions/product-actions/update-product";
 import { toast } from "sonner";
 import { produtoCreateSchema } from "@/app/actions/product-actions/create/schema";
 import { ProductInsert } from "@/app/actions/product-actions/create";
+import { updateProductBalanced } from "@/app/actions/product-actions/product-balance-stock-update";
 
 export interface Props {
   id_product: number;
+  type: "update" | "create";
 }
 
 const productUpdate = z.object({
@@ -40,7 +45,7 @@ const productUpdate = z.object({
     }),
 });
 
-export const UpdateProductDialog = ({ id_product }: Props) => {
+export const UpdateProductDialog = ({ id_product, type }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -51,13 +56,18 @@ export const UpdateProductDialog = ({ id_product }: Props) => {
   } = useQuery({
     // Chave de query única para este produto específico
     queryKey: ["product", id_product],
-    queryFn: () => getProductById(id_product),
+    queryFn: () =>
+      type === "create"
+        ? getProductById(id_product)
+        : getProductBalanceById(id_product),
     enabled: !!id_product, // A query só será executada se id_product existir
   });
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (values: z.infer<typeof produtoCreateSchema>) => {
-      return await ProductInsert(values);
+      return type === "update"
+        ? await updateProductBalanced(id_product, values)
+        : await ProductInsert(values);
     },
     onError: (error) => {
       toast.error("Falha ao atualizar o estoque.");
@@ -85,11 +95,11 @@ export const UpdateProductDialog = ({ id_product }: Props) => {
   useEffect(() => {
     if (product) {
       form.reset({
-        nome: product.nome,
-        estoque_atual: String(product.estoque_atual) || "0",
-        preco_compra: product.preco_compra || "0",
-        preco_custo: product.preco_custo || "0",
-        preco_venda: product.preco_venda || "0",
+        nome: product.nome || "0",
+        estoque_atual: product?.estoque_atual || "0",
+        preco_venda: product?.preco_venda || "0",
+        preco_compra: product?.preco_compra || "0",
+        preco_custo: product?.preco_custo || "0",
       });
     } else {
       form.reset(); // Limpa o formulário se o produto não for encontrado ou enquanto carrega
