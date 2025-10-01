@@ -2,6 +2,7 @@
 import { Produto, produtos } from "@/db/schema";
 import { db } from "@/db/index";
 import { SQL, and, ilike } from "drizzle-orm";
+import { ProdutoBalanceComEstoqueNumerico } from "../get-product-updates";
 
 export type ProdutoComEstoqueNumerico = Omit<Produto, "estoque_atual"> & {
   estoque_atual: number;
@@ -30,7 +31,7 @@ export const getProductBy = async (filters?: {
 
 export const getProductBUpdateByName = async (filters?: {
   nome: string;
-}): Promise<ProdutoComEstoqueNumerico[]> => {
+}): Promise<ProdutoBalanceComEstoqueNumerico[]> => {
   const { nome } = filters || {};
   const conditions: (SQL | undefined)[] = [];
 
