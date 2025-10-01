@@ -9,6 +9,7 @@ export type ProdutoBalanceComEstoqueNumerico = Omit<
 > & {
   estoque_atual: number;
 };
+
 export const getProductAllProductBalance = async (): Promise<
   ProdutoBalanceComEstoqueNumerico[]
 > => {
