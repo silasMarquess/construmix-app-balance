@@ -12,6 +12,7 @@ import { ProdutoBalanceComEstoqueNumerico } from "@/app/actions/product-actions/
 import { formatCurrency } from "@/lib/formatToReal";
 import { calcSubtotal } from "../helper/calcul_subtotal";
 import { UpdateProductDialog } from "./dialog-update-button";
+import ButtonDelete from "./button_delete";
 
 interface Props {
   data: ProdutoBalanceComEstoqueNumerico[];
@@ -27,6 +28,7 @@ const ProductTableUpdates = ({ data }: Props) => {
           <TableHead>Nome</TableHead>
           <TableHead>Estoque x Preço/Custo</TableHead>
           <TableHead>Estoque x Preço/Venda</TableHead>
+          <TableHead>excluir</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -48,6 +50,9 @@ const ProductTableUpdates = ({ data }: Props) => {
               {formatCurrency(
                 calcSubtotal(item.estoque_atual, Number(item.preco_venda))
               )}
+            </TableCell>
+            <TableCell>
+              <ButtonDelete id_product={item.id} />
             </TableCell>
           </TableRow>
         ))}

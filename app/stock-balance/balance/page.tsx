@@ -5,13 +5,14 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeftIcon, Loader2Icon, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { formatCurrency } from "@/lib/formatToReal";
 import { getProductAllProductBalance } from "@/app/actions/product-actions/get-product-updates";
 import ProductTableUpdates from "../components/updates_products";
 import { calcSubtotal } from "../helper/calcul_subtotal";
 import { getProductBUpdateByName } from "@/app/actions/product-actions/get-all-product";
+import { deleteProduct } from "@/app/actions/product-actions/delete";
 
 const StockBalancePage = () => {
   const router = useRouter();
@@ -37,36 +38,7 @@ const StockBalancePage = () => {
     queryKey: ["products-balance", debouncedSearchTerm],
     queryFn: async () =>
       await getProductBUpdateByName({ nome: debouncedSearchTerm }),
-    // select: (data) => {
-    //   if (!data) return [];
-    //   // 1. Filtra os produtos pelo nome no cliente
-    //   const filteredData = debouncedSearchTerm
-    //     ? data.filter((product) =>
-    //         product.nome
-    //           .toLowerCase()
-    //           .includes(debouncedSearchTerm.toLowerCase())
-    //       )
-    //     : data;
-
-    //   // 2. Converte os campos para número (ajuste os campos conforme necessário)
-    //   return filteredData.map((product) => ({
-    //     ...product,
-    //     estoque_atual: Number(product.estoque_atual),
-    //   }));
-    // },
   });
-
-  //   const { data: productById, isLoading: isLoadingById } = useQuery({
-  //     // A chave de query agora usa o estado 'productId'
-  //     queryKey: ["product", productId],
-  //     // A queryFn recebe o contexto e extrai o ID da queryKey
-  //     queryFn: async ({ queryKey }) => {
-  //       const [_key, id] = queryKey;
-  //       return getProductById(id as number);
-  //     },
-  //     // A query só será executada se productId não for nulo
-  //     enabled: !!productId,
-  //   });
 
   const totalCusto = products?.reduce(
     (total, product) =>
