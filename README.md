@@ -16,21 +16,46 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Sobre o Projeto
+A Solução Full-Stack para a Loja do Meu Amigo 
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Na terça-feira, 29/09/2025, recebi uma ligação urgente do meu amigo, dono de uma casa de material de construção em Senador La Rocque. Ele precisava de um balanço de estoque rápido para negociar a venda da loja até a sexta-feira. O sistema dele era bom, mas não servia para a escala do problema.
+Eu tinha que agir rápido.
 
-## Learn More
+1. O Problema Real de Negócio (A Dor)
+O processo de balanço de estoque da loja estava em risco por vários gargalos:
 
-To learn more about Next.js, take a look at the following resources:
+Inconsistência de Dados: O sistema ERP retornava uma lista imensa do banco de dados, incluindo itens que não estavam mais em estoque, forçando a equipe a perder tempo com dados desnecessários.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Monousuário e Centralizado: Apenas um terminal podia ser usado. O funcionário precisava fazer viagens constantes entre o computador e as prateleiras, gerando lentidão e brechas para erros humanos.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Prazo Apertado: A solução precisava estar funcionando em menos de 48 horas.
 
-## Deploy on Vercel
+2. A Solução Full-Stack em 3 Horas (O Resgate)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+A resposta foi desenvolver um Aplicativo Web dedicado e otimizado, acessível via browser de qualquer dispositivo na rede interna da loja.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+O objetivo: Criar uma interface simples e multiusuário que se conectasse ao BD existente e permitisse que todos os funcionários atualizassem o estoque simultaneamente, focando apenas nos itens que interessavam para o balanço.
+
+3. O Stack e as Decisões Técnicas
+Para entregar a solução com a velocidade e segurança necessárias, utilizei este stack focado:
+
+- Frontend & Backend: Escolhi Next.js para ter a agilidade de um framework Full-Stack unificado (Frontend + API Routes).
+
+- Conexão Segura: Usei Drizzle-ORM para fazer o mapeamento Objeto-Relacional e interagir de forma segura e produtiva com o Postgres legado do cliente.
+Performance Multiplataforma: Implementei React-Query no frontend. Isso garantiu cache do lado do cliente, eliminando delay e garantindo que as atualizações de estoque feitas por um funcionário fossem refletidas instantaneamente para os outros.
+
+User Experience (UX): Usei a biblioteca de componentes ShadcnUI para criar uma interface visualmente limpa e amigável.
+
+"Rapa o APP ficou um bala"
+
+4. O Resultado e o Impacto no Negócio
+A aplicação foi entregue em 3 horas, e o impacto foi imediato:
+
+Paralelização: O processo que levaria dias no sistema antigo foi acelerado, pois vários funcionários puderam trabalhar simultaneamente em seus próprios dispositivos.
+
+Foco e Precisão: A interface focou apenas nos dados relevantes, permitindo que a equipe conseguisse o valor exato do estoque a preço de custo.
+
+Meta Alcançada: O balanço foi concluído a tempo de meu amigo negociar a venda da loja.
+
+Hoje sábado ele me liga bem cedo: "Voçê foi uma peça chave nesse desafio, eu não sabia o que fazer e voçê me ajudou"...Eu fiquei grato por minha solução ter ajudado. Para mim valeu a pena essa experiência trouxe ainda mais responsabilidade. A equipe dele também ajudou muito no processo...
