@@ -1,4 +1,3 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
@@ -13,9 +12,6 @@ pnpm dev
 # or
 bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
 ## Sobre o Projeto
 A Solução Full-Stack para a Loja do Meu Amigo 
 
@@ -59,3 +55,6 @@ Foco e Precisão: A interface focou apenas nos dados relevantes, permitindo que 
 Meta Alcançada: O balanço foi concluído a tempo de meu amigo negociar a venda da loja.
 
 Hoje sábado ele me liga bem cedo: "Voçê foi uma peça chave nesse desafio, eu não sabia o que fazer e voçê me ajudou"...Eu fiquei grato por minha solução ter ajudado. Para mim valeu a pena essa experiência trouxe ainda mais responsabilidade. A equipe dele também ajudou muito no processo...
+
+## IMAGENS DO PROJETO
+link: <https://www.marquesfullstack.com.br/projects/11>
